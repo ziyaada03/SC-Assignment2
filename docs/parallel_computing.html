@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Parallel Computing Practical – Statistical Computing Assignment 2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-969ddfa49e00a70eb3423444dbc81f6c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-065a5179aebd64318d7ea99d77b64a9e.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-f78df75c894ad2ea722f04417f8702c7.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-78d0a13e6d35108d84457cbe65748f29.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-f78df75c894ad2ea722f04417f8702c7.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Statistical Computing Assignment 2</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./parallel_computing.html" aria-current="page"> 
+<span class="menu-text">Full Report</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question-1-foreach-loop-experimentation" id="toc-question-1-foreach-loop-experimentation" class="nav-link active" data-scroll-target="#question-1-foreach-loop-experimentation"><span class="header-section-number">1</span> Question 1: Foreach loop Experimentation</a></li>
+  <li><a href="#question-2-parallel-bootstrapping-of-the-median" id="toc-question-2-parallel-bootstrapping-of-the-median" class="nav-link" data-scroll-target="#question-2-parallel-bootstrapping-of-the-median"><span class="header-section-number">2</span> Question 2: Parallel Bootstrapping of the Median</a>
+  <ul class="collapse">
+  <li><a href="#serial-bootstrap" id="toc-serial-bootstrap" class="nav-link" data-scroll-target="#serial-bootstrap"><span class="header-section-number">2.1</span> Serial Bootstrap:</a></li>
+  <li><a href="#parallel-bootstrap-one-bootstrap-per-iteration" id="toc-parallel-bootstrap-one-bootstrap-per-iteration" class="nav-link" data-scroll-target="#parallel-bootstrap-one-bootstrap-per-iteration"><span class="header-section-number">2.2</span> Parallel Bootstrap (One bootstrap per iteration):</a></li>
+  <li><a href="#parallel-bootstrap-with-batching-1000-per-worker-task" id="toc-parallel-bootstrap-with-batching-1000-per-worker-task" class="nav-link" data-scroll-target="#parallel-bootstrap-with-batching-1000-per-worker-task"><span class="header-section-number">2.3</span> Parallel Bootstrap with Batching (1000 per worker task)</a></li>
+  </ul></li>
+  <li><a href="#question-3-bootstrap-coverage-simulation" id="toc-question-3-bootstrap-coverage-simulation" class="nav-link" data-scroll-target="#question-3-bootstrap-coverage-simulation"><span class="header-section-number">3</span> Question 3: Bootstrap Coverage Simulation</a></li>
+  <li><a href="#question-4" id="toc-question-4" class="nav-link" data-scroll-target="#question-4"><span class="header-section-number">4</span> Question 4:</a></li>
+  <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5"><span class="header-section-number">5</span> Question 5:</a>
+  <ul class="collapse">
+  <li><a href="#replicate-baseline" id="toc-replicate-baseline" class="nav-link" data-scroll-target="#replicate-baseline"><span class="header-section-number">5.1</span> Replicate (Baseline):</a></li>
+  <li><a href="#foreach-version" id="toc-foreach-version" class="nav-link" data-scroll-target="#foreach-version"><span class="header-section-number">5.2</span> Foreach Version:</a></li>
+  <li><a href="#parallel" id="toc-parallel" class="nav-link" data-scroll-target="#parallel"><span class="header-section-number">5.3</span> Parallel:</a></li>
+  <li><a href="#parlapply-version" id="toc-parlapply-version" class="nav-link" data-scroll-target="#parlapply-version"><span class="header-section-number">5.4</span> parLapply Version:</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/ziyaada03/SC-Assignment2.git/blob/main/parallel_computing.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Parallel Computing Practical</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="question-1-foreach-loop-experimentation" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Question 1: Foreach loop Experimentation</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)   <span class="co"># optional, for reproducibility</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">1000</span>     <span class="co"># &lt;-- choose sample size (question doesn't specify)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">.combine =</span> rbind) <span class="sc">%do%</span> {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  x_exp <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)        <span class="co"># exponential with mean 1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(x_exp), <span class="at">var =</span> <span class="fu">var</span>(x_exp))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>results</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                mean       var
+result.1   1.0313027 0.9786333
+result.2   0.9835434 0.9815014
+result.3   1.0818140 1.2550505
+result.4   0.9389005 0.9629267
+result.5   1.0247902 1.1752677
+result.6   0.9486421 0.9058095
+result.7   0.9805007 1.0337246
+result.8   0.9679499 0.9438743
+result.9   1.0117298 1.0019641
+result.10  1.0144393 1.0692747
+result.11  0.9631482 0.8978858
+result.12  0.9961887 0.8774613
+result.13  1.0333988 1.0841105
+result.14  0.9880045 0.9638238
+result.15  1.0209995 0.9780074
+result.16  0.9453456 0.8079335
+result.17  1.0375844 1.0694607
+result.18  1.0238085 0.8999454
+result.19  0.9785002 0.9898071
+result.20  0.9656615 0.9941361
+result.21  0.9865729 0.9978514
+result.22  0.9958122 0.9775518
+result.23  0.9537707 0.8589293
+result.24  1.0001437 0.9857569
+result.25  0.9738992 0.9502280
+result.26  1.0103345 0.9666074
+result.27  1.0079689 1.0824930
+result.28  0.9988629 1.1243880
+result.29  0.9332774 0.8650596
+result.30  1.0120886 1.1160083
+result.31  1.0380837 1.1232312
+result.32  1.0171108 1.1201296
+result.33  0.9600871 0.7867749
+result.34  1.0474666 1.1554636
+result.35  1.0288508 0.9767777
+result.36  1.0031458 1.0455669
+result.37  0.9817091 0.9837367
+result.38  0.9946747 0.9842155
+result.39  1.0182635 1.0616313
+result.40  1.0218261 1.0430447
+result.41  1.0221567 1.0291942
+result.42  1.0244518 1.0393174
+result.43  0.9767339 0.9322047
+result.44  1.0384112 1.0999901
+result.45  1.0485217 1.1977786
+result.46  1.0329312 1.1382620
+result.47  1.0164090 0.9912762
+result.48  1.0112398 1.0201387
+result.49  1.0779749 1.1025222
+result.50  1.0215096 0.9910904
+result.51  1.0147553 0.9731918
+result.52  0.9764819 1.0632304
+result.53  0.9581230 1.0182481
+result.54  1.0315221 1.1331262
+result.55  1.0443987 1.1002168
+result.56  0.9748261 0.9235055
+result.57  1.0109147 0.9977795
+result.58  0.9876215 0.9613870
+result.59  1.0353851 1.0525024
+result.60  0.9902192 0.9341333
+result.61  0.9636531 0.8879503
+result.62  0.9909700 1.0228540
+result.63  1.0233567 1.0054774
+result.64  1.0272990 1.0252174
+result.65  0.9880080 0.9871918
+result.66  0.9465605 1.0131585
+result.67  1.0041699 0.9504636
+result.68  1.0479885 1.1519072
+result.69  0.9803458 0.9452229
+result.70  0.9977605 0.9706140
+result.71  1.0381804 1.1816593
+result.72  1.0047518 1.0234839
+result.73  0.9725990 0.9270461
+result.74  1.0786367 1.0687342
+result.75  1.0013499 0.9114923
+result.76  1.0164524 1.0709289
+result.77  1.0039343 1.0225032
+result.78  0.9981551 0.9689776
+result.79  0.9953469 1.0482052
+result.80  1.0059072 1.0302505
+result.81  1.0323107 1.0144545
+result.82  1.0035524 0.9637289
+result.83  1.0279003 1.0061957
+result.84  0.9333129 0.8911205
+result.85  1.0014807 0.9458462
+result.86  0.9220987 0.8134307
+result.87  1.0318815 1.0804089
+result.88  1.0143130 0.9693476
+result.89  1.0035318 1.0563924
+result.90  0.9800668 0.8303149
+result.91  1.0048351 0.9656916
+result.92  0.9781290 0.8957636
+result.93  0.9790531 0.8825760
+result.94  1.0345803 0.9999594
+result.95  0.9887709 0.9263355
+result.96  0.9993229 0.9985710
+result.97  0.9641514 0.9214794
+result.98  1.0570749 1.0902030
+result.99  1.0302152 1.1096513
+result.100 0.9829585 1.0560014</code></pre>
+</div>
+</div>
+</section>
+<section id="question-2-parallel-bootstrapping-of-the-median" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Question 2: Parallel Bootstrapping of the Median</h1>
+<ul>
+<li>user = CPU time spent executing your R code</li>
+<li>system = OS-level time (managing processes, communication, etc.)</li>
+<li>elapsed = actual wall-clock time (what you care about)</li>
+</ul>
+<p>For performance comparisons, elapsed is the key number.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(galaxies, <span class="at">package =</span> <span class="st">"MASS"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> galaxies</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">10000</span>  <span class="co"># number of bootstrap samples</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<section id="serial-bootstrap" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="serial-bootstrap"><span class="header-section-number">2.1</span> Serial Bootstrap:</h2>
+<p>This is the baseline - no parallel computing.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>time_serial <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  boot_serial <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>time_serial</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   0.47    0.00    0.47 </code></pre>
+</div>
+</div>
+<p>Note: The baseline is already quite fast, hence the task can be seen as not computationally heavy.</p>
+</section>
+<section id="parallel-bootstrap-one-bootstrap-per-iteration" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="parallel-bootstrap-one-bootstrap-per-iteration"><span class="header-section-number">2.2</span> Parallel Bootstrap (One bootstrap per iteration):</h2>
+<p>Set up the cluster and Run a parallel version.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>time_parallel_single <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  boot_parallel_single <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>B, <span class="at">.combine =</span> c) <span class="sc">%dopar%</span> {</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>time_parallel_single</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   2.45    1.03    3.53 </code></pre>
+</div>
+</div>
+<p>Note: We observe that parallel is much slower than serial. This could be due to the fact that each bootstrap task is tiny. You’re asking workers too: - receive a task - run one median computation - send result back The communication and coordination overhead dominates the actual computation time, and so this version shows that naive parallelisation can be slower than serial.</p>
+</section>
+<section id="parallel-bootstrap-with-batching-1000-per-worker-task" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="parallel-bootstrap-with-batching-1000-per-worker-task"><span class="header-section-number">2.3</span> Parallel Bootstrap with Batching (1000 per worker task)</h2>
+<p>Batch reduces overhead from too many tiny tasks</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>chunk_size <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>chunks <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="dv">1</span><span class="sc">:</span>B, <span class="fu">ceiling</span>((<span class="dv">1</span><span class="sc">:</span>B) <span class="sc">/</span> chunk_size))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>time_parallel_chunk <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  boot_parallel_chunk <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">chunk =</span> chunks, <span class="at">.combine =</span> c) <span class="sc">%dopar%</span> {</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">replicate</span>(<span class="fu">length</span>(chunk), {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>time_parallel_chunk</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   0.00    0.00    0.17 </code></pre>
+</div>
+</div>
+<p>Instead of sending 10,000 tiny jobs, you sent maybe 10 larger jobs (each doing 1000 bootstraps). Now: - Workers do substantial work before communicating back - Overhead is a mortised - Communication cost becomes negligible That’s why elapsed drops. This shows that batching reduces overhead and makes parallel computing effective.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+</section>
+<section id="question-3-bootstrap-coverage-simulation" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Question 3: Bootstrap Coverage Simulation</h1>
+<p>Estimating the coverage of a percentile bootstrap confidence interval for the following scenario: sample of size 50 from an exponential distribution with mean 1.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">2000</span>     <span class="co"># number of simulated datasets (increase for more accuracy)</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span>       <span class="co"># sample size per dataset</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span>     <span class="co"># bootstrap resamples per dataset</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>true_mu <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># true mean of Exp(mean=1)</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>cover <span class="ot">&lt;-</span> <span class="fu">logical</span>(R)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)  <span class="co"># mean = 1</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  boot_means <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, <span class="fu">mean</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  ci <span class="ot">&lt;-</span> <span class="fu">quantile</span>(boot_means, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">type =</span> <span class="dv">6</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>  cover[r] <span class="ot">&lt;-</span> (ci[<span class="dv">1</span>] <span class="sc">&lt;=</span> true_mu) <span class="sc">&amp;&amp;</span> (true_mu <span class="sc">&lt;=</span> ci[<span class="dv">2</span>])</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(cover)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9355</code></pre>
+</div>
+</div>
+<p>Using 𝑅simulated data sets of size 𝑛= 50 from an exponential distribution with mean 1, and constructing 95% percentile bootstrap confidence intervals for the mean using 𝐵 bootstrap re-samples per data set, the estimated coverage was approximately 0.93. This is lower than the nominal 0.95 level, suggesting under-coverage. A likely reason is that the sampling distribution of the mean is skewed for exponential data at this sample size, and the simple percentile bootstrap interval is not perfectly calibrated under skewness</p>
+</section>
+<section id="question-4" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Question 4:</h1>
+<p>Create an iterator that will generate 3 vectors, each of length 5 from a standard normal distribution, then use foreach to loop over those 3 vectors and return the max of each one.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(iterators)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">x =</span> <span class="fu">irnorm</span>(<span class="dv">5</span>, <span class="at">count =</span> <span class="dv">3</span>), <span class="at">.combine =</span> c) <span class="sc">%do%</span> {</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(x)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.0844412 0.5060559 0.9594941</code></pre>
+</div>
+</div>
+</section>
+<section id="question-5" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Question 5:</h1>
+<p>Run-Time comparisons between: - parLapply - foreach - replicate</p>
+<p>We expect since the problem is very small (only 3 × 5 numbers), parallel versions will likely be slower due to overhead.</p>
+<section id="replicate-baseline" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="replicate-baseline"><span class="header-section-number">5.1</span> Replicate (Baseline):</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  replicate_result <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">3</span>, <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>)))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   0.00    0.00    0.02 </code></pre>
+</div>
+</div>
+</section>
+<section id="foreach-version" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="foreach-version"><span class="header-section-number">5.2</span> Foreach Version:</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  foreach_result <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine =</span> c) <span class="sc">%do%</span> {</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+      0       0       0 </code></pre>
+</div>
+</div>
+</section>
+<section id="parallel" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="parallel"><span class="header-section-number">5.3</span> Parallel:</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  foreach_parallel <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine =</span> c) <span class="sc">%dopar%</span> {</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   0.00    0.00    0.05 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="parlapply-version" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="parlapply-version"><span class="header-section-number">5.4</span> parLapply Version:</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  par_result <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">parLapply</span>(cl, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="cf">function</span>(i) {</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   0.02    0.00    0.00 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+
+
+<!-- -->
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Parallel Computing Practical"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="an">editor:</span><span class="co"> visual</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 1: Foreach loop Experimentation</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)   <span class="co"># optional, for reproducibility</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">1000</span>     <span class="co"># &lt;-- choose sample size (question doesn't specify)</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>, <span class="at">.combine =</span> rbind) <span class="sc">%do%</span> {</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  x_exp <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)        <span class="co"># exponential with mean 1</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="at">mean =</span> <span class="fu">mean</span>(x_exp), <span class="at">var =</span> <span class="fu">var</span>(x_exp))</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>results</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 2: Parallel Bootstrapping of the Median</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>user = CPU time spent executing your R code</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>system = OS-level time (managing processes, communication, etc.)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>elapsed = actual wall-clock time (what you care about)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>For performance comparisons, elapsed is the key number.</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel)</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(galaxies, <span class="at">package =</span> <span class="st">"MASS"</span>)</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> galaxies</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">10000</span>  <span class="co"># number of bootstrap samples</span></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Serial Bootstrap:</span></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>This is the baseline - no parallel computing.</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>time_serial <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>  boot_serial <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, {</span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>time_serial</span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-64"><a href="#cb25-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-65"><a href="#cb25-65" aria-hidden="true" tabindex="-1"></a>Note: The baseline is already quite fast, hence the task can be seen as not computationally heavy.</span>
+<span id="cb25-66"><a href="#cb25-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-67"><a href="#cb25-67" aria-hidden="true" tabindex="-1"></a><span class="fu">## Parallel Bootstrap (One bootstrap per iteration):</span></span>
+<span id="cb25-68"><a href="#cb25-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-69"><a href="#cb25-69" aria-hidden="true" tabindex="-1"></a>Set up the cluster and Run a parallel version.</span>
+<span id="cb25-70"><a href="#cb25-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-73"><a href="#cb25-73" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-74"><a href="#cb25-74" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb25-75"><a href="#cb25-75" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb25-76"><a href="#cb25-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-77"><a href="#cb25-77" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb25-78"><a href="#cb25-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-79"><a href="#cb25-79" aria-hidden="true" tabindex="-1"></a>time_parallel_single <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb25-80"><a href="#cb25-80" aria-hidden="true" tabindex="-1"></a>  boot_parallel_single <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>B, <span class="at">.combine =</span> c) <span class="sc">%dopar%</span> {</span>
+<span id="cb25-81"><a href="#cb25-81" aria-hidden="true" tabindex="-1"></a>    <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb25-82"><a href="#cb25-82" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-83"><a href="#cb25-83" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-84"><a href="#cb25-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-85"><a href="#cb25-85" aria-hidden="true" tabindex="-1"></a>time_parallel_single</span>
+<span id="cb25-86"><a href="#cb25-86" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-87"><a href="#cb25-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-88"><a href="#cb25-88" aria-hidden="true" tabindex="-1"></a>Note: We observe that parallel is much slower than serial. This could be due to the fact that each bootstrap task is tiny. You're asking workers too: - receive a task - run one median computation - send result back The communication and coordination overhead dominates the actual computation time, and so this version shows that naive parallelisation can be slower than serial.</span>
+<span id="cb25-89"><a href="#cb25-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-90"><a href="#cb25-90" aria-hidden="true" tabindex="-1"></a><span class="fu">## Parallel Bootstrap with Batching (1000 per worker task)</span></span>
+<span id="cb25-91"><a href="#cb25-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-92"><a href="#cb25-92" aria-hidden="true" tabindex="-1"></a>Batch reduces overhead from too many tiny tasks</span>
+<span id="cb25-93"><a href="#cb25-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-96"><a href="#cb25-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-97"><a href="#cb25-97" aria-hidden="true" tabindex="-1"></a>chunk_size <span class="ot">&lt;-</span> <span class="dv">1000</span></span>
+<span id="cb25-98"><a href="#cb25-98" aria-hidden="true" tabindex="-1"></a>chunks <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="dv">1</span><span class="sc">:</span>B, <span class="fu">ceiling</span>((<span class="dv">1</span><span class="sc">:</span>B) <span class="sc">/</span> chunk_size))</span>
+<span id="cb25-99"><a href="#cb25-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-100"><a href="#cb25-100" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb25-101"><a href="#cb25-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-102"><a href="#cb25-102" aria-hidden="true" tabindex="-1"></a>time_parallel_chunk <span class="ot">&lt;-</span> <span class="fu">system.time</span>({</span>
+<span id="cb25-103"><a href="#cb25-103" aria-hidden="true" tabindex="-1"></a>  boot_parallel_chunk <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">chunk =</span> chunks, <span class="at">.combine =</span> c) <span class="sc">%dopar%</span> {</span>
+<span id="cb25-104"><a href="#cb25-104" aria-hidden="true" tabindex="-1"></a>    <span class="fu">replicate</span>(<span class="fu">length</span>(chunk), {</span>
+<span id="cb25-105"><a href="#cb25-105" aria-hidden="true" tabindex="-1"></a>      <span class="fu">median</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb25-106"><a href="#cb25-106" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb25-107"><a href="#cb25-107" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-108"><a href="#cb25-108" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-109"><a href="#cb25-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-110"><a href="#cb25-110" aria-hidden="true" tabindex="-1"></a>time_parallel_chunk</span>
+<span id="cb25-111"><a href="#cb25-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-112"><a href="#cb25-112" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-113"><a href="#cb25-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-114"><a href="#cb25-114" aria-hidden="true" tabindex="-1"></a>Instead of sending 10,000 tiny jobs, you sent maybe 10 larger jobs (each doing 1000 bootstraps). Now: - Workers do substantial work before communicating back - Overhead is a mortised - Communication cost becomes negligible That’s why elapsed drops. This shows that batching reduces overhead and makes parallel computing effective.</span>
+<span id="cb25-115"><a href="#cb25-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-118"><a href="#cb25-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-119"><a href="#cb25-119" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span>
+<span id="cb25-120"><a href="#cb25-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-121"><a href="#cb25-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-122"><a href="#cb25-122" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 3: Bootstrap Coverage Simulation</span></span>
+<span id="cb25-123"><a href="#cb25-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-124"><a href="#cb25-124" aria-hidden="true" tabindex="-1"></a>Estimating the coverage of a percentile bootstrap confidence interval for the following scenario: sample of size 50 from an exponential distribution with mean 1.</span>
+<span id="cb25-125"><a href="#cb25-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-128"><a href="#cb25-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-129"><a href="#cb25-129" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb25-130"><a href="#cb25-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-131"><a href="#cb25-131" aria-hidden="true" tabindex="-1"></a>R <span class="ot">&lt;-</span> <span class="dv">2000</span>     <span class="co"># number of simulated datasets (increase for more accuracy)</span></span>
+<span id="cb25-132"><a href="#cb25-132" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span>       <span class="co"># sample size per dataset</span></span>
+<span id="cb25-133"><a href="#cb25-133" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="dv">1000</span>     <span class="co"># bootstrap resamples per dataset</span></span>
+<span id="cb25-134"><a href="#cb25-134" aria-hidden="true" tabindex="-1"></a>true_mu <span class="ot">&lt;-</span> <span class="dv">1</span>  <span class="co"># true mean of Exp(mean=1)</span></span>
+<span id="cb25-135"><a href="#cb25-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-136"><a href="#cb25-136" aria-hidden="true" tabindex="-1"></a>cover <span class="ot">&lt;-</span> <span class="fu">logical</span>(R)</span>
+<span id="cb25-137"><a href="#cb25-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-138"><a href="#cb25-138" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (r <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>R) {</span>
+<span id="cb25-139"><a href="#cb25-139" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rexp</span>(n, <span class="at">rate =</span> <span class="dv">1</span>)  <span class="co"># mean = 1</span></span>
+<span id="cb25-140"><a href="#cb25-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-141"><a href="#cb25-141" aria-hidden="true" tabindex="-1"></a>  boot_means <span class="ot">&lt;-</span> <span class="fu">replicate</span>(B, <span class="fu">mean</span>(<span class="fu">sample</span>(x, <span class="at">replace =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb25-142"><a href="#cb25-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-143"><a href="#cb25-143" aria-hidden="true" tabindex="-1"></a>  ci <span class="ot">&lt;-</span> <span class="fu">quantile</span>(boot_means, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>), <span class="at">type =</span> <span class="dv">6</span>)</span>
+<span id="cb25-144"><a href="#cb25-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-145"><a href="#cb25-145" aria-hidden="true" tabindex="-1"></a>  cover[r] <span class="ot">&lt;-</span> (ci[<span class="dv">1</span>] <span class="sc">&lt;=</span> true_mu) <span class="sc">&amp;&amp;</span> (true_mu <span class="sc">&lt;=</span> ci[<span class="dv">2</span>])</span>
+<span id="cb25-146"><a href="#cb25-146" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-147"><a href="#cb25-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-148"><a href="#cb25-148" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(cover)</span>
+<span id="cb25-149"><a href="#cb25-149" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-150"><a href="#cb25-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-151"><a href="#cb25-151" aria-hidden="true" tabindex="-1"></a>Using 𝑅simulated data sets of size 𝑛= 50 from an exponential distribution with mean 1, and constructing 95% percentile bootstrap confidence intervals for the mean using 𝐵 bootstrap re-samples per data set, the estimated coverage was approximately 0.93. This is lower than the nominal 0.95 level, suggesting under-coverage. A likely reason is that the sampling distribution of the mean is skewed for exponential data at this sample size, and the simple percentile bootstrap interval is not perfectly calibrated under skewness</span>
+<span id="cb25-152"><a href="#cb25-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-153"><a href="#cb25-153" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 4:</span></span>
+<span id="cb25-154"><a href="#cb25-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-155"><a href="#cb25-155" aria-hidden="true" tabindex="-1"></a>Create an iterator that will generate 3 vectors, each of length 5 from a standard normal distribution, then use foreach to loop over those 3 vectors and return the max of each one.</span>
+<span id="cb25-156"><a href="#cb25-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-159"><a href="#cb25-159" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-160"><a href="#cb25-160" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb25-161"><a href="#cb25-161" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(iterators)</span>
+<span id="cb25-162"><a href="#cb25-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-163"><a href="#cb25-163" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-164"><a href="#cb25-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-165"><a href="#cb25-165" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">x =</span> <span class="fu">irnorm</span>(<span class="dv">5</span>, <span class="at">count =</span> <span class="dv">3</span>), <span class="at">.combine =</span> c) <span class="sc">%do%</span> {</span>
+<span id="cb25-166"><a href="#cb25-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">max</span>(x)</span>
+<span id="cb25-167"><a href="#cb25-167" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb25-168"><a href="#cb25-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-169"><a href="#cb25-169" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(result)</span>
+<span id="cb25-170"><a href="#cb25-170" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-171"><a href="#cb25-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-172"><a href="#cb25-172" aria-hidden="true" tabindex="-1"></a><span class="fu"># Question 5:</span></span>
+<span id="cb25-173"><a href="#cb25-173" aria-hidden="true" tabindex="-1"></a>Run-Time comparisons between:</span>
+<span id="cb25-174"><a href="#cb25-174" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>parLapply</span>
+<span id="cb25-175"><a href="#cb25-175" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>foreach</span>
+<span id="cb25-176"><a href="#cb25-176" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>replicate</span>
+<span id="cb25-177"><a href="#cb25-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-178"><a href="#cb25-178" aria-hidden="true" tabindex="-1"></a>We expect since the problem is very small (only 3 × 5 numbers), parallel versions will likely be slower due to overhead.</span>
+<span id="cb25-179"><a href="#cb25-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-180"><a href="#cb25-180" aria-hidden="true" tabindex="-1"></a><span class="fu">## Replicate (Baseline):</span></span>
+<span id="cb25-183"><a href="#cb25-183" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-184"><a href="#cb25-184" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-185"><a href="#cb25-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-186"><a href="#cb25-186" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb25-187"><a href="#cb25-187" aria-hidden="true" tabindex="-1"></a>  replicate_result <span class="ot">&lt;-</span> <span class="fu">replicate</span>(<span class="dv">3</span>, <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>)))</span>
+<span id="cb25-188"><a href="#cb25-188" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-189"><a href="#cb25-189" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-190"><a href="#cb25-190" aria-hidden="true" tabindex="-1"></a><span class="fu">## Foreach Version:</span></span>
+<span id="cb25-193"><a href="#cb25-193" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-194"><a href="#cb25-194" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-195"><a href="#cb25-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-196"><a href="#cb25-196" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb25-197"><a href="#cb25-197" aria-hidden="true" tabindex="-1"></a>  foreach_result <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine =</span> c) <span class="sc">%do%</span> {</span>
+<span id="cb25-198"><a href="#cb25-198" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>))</span>
+<span id="cb25-199"><a href="#cb25-199" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-200"><a href="#cb25-200" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-201"><a href="#cb25-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-202"><a href="#cb25-202" aria-hidden="true" tabindex="-1"></a><span class="fu">## Parallel:</span></span>
+<span id="cb25-205"><a href="#cb25-205" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-206"><a href="#cb25-206" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb25-207"><a href="#cb25-207" aria-hidden="true" tabindex="-1"></a><span class="fu">registerDoParallel</span>(cl)</span>
+<span id="cb25-208"><a href="#cb25-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-209"><a href="#cb25-209" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-210"><a href="#cb25-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-211"><a href="#cb25-211" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb25-212"><a href="#cb25-212" aria-hidden="true" tabindex="-1"></a>  foreach_parallel <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">.combine =</span> c) <span class="sc">%dopar%</span> {</span>
+<span id="cb25-213"><a href="#cb25-213" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>))</span>
+<span id="cb25-214"><a href="#cb25-214" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb25-215"><a href="#cb25-215" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-216"><a href="#cb25-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-217"><a href="#cb25-217" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span>
+<span id="cb25-218"><a href="#cb25-218" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-219"><a href="#cb25-219" aria-hidden="true" tabindex="-1"></a><span class="fu">## parLapply Version:</span></span>
+<span id="cb25-222"><a href="#cb25-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb25-223"><a href="#cb25-223" aria-hidden="true" tabindex="-1"></a>cl <span class="ot">&lt;-</span> <span class="fu">makeCluster</span>(<span class="fu">detectCores</span>() <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb25-224"><a href="#cb25-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-225"><a href="#cb25-225" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-226"><a href="#cb25-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-227"><a href="#cb25-227" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb25-228"><a href="#cb25-228" aria-hidden="true" tabindex="-1"></a>  par_result <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">parLapply</span>(cl, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="cf">function</span>(i) {</span>
+<span id="cb25-229"><a href="#cb25-229" aria-hidden="true" tabindex="-1"></a>    <span class="fu">max</span>(<span class="fu">rnorm</span>(<span class="dv">5</span>))</span>
+<span id="cb25-230"><a href="#cb25-230" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb25-231"><a href="#cb25-231" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-232"><a href="#cb25-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-233"><a href="#cb25-233" aria-hidden="true" tabindex="-1"></a><span class="fu">stopCluster</span>(cl)</span>
+<span id="cb25-234"><a href="#cb25-234" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb25-235"><a href="#cb25-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-236"><a href="#cb25-236" aria-hidden="true" tabindex="-1"></a></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Built with Quarto</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ziyaada03/SC-Assignment2.git/blob/main/parallel_computing.qmd" class="toc-action"><i class="bi bi-github"></i>View source</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>© 2026</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>
