@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "parallel_computing.html",
+    "href": "parallel_computing.html",
+    "title": "Parallel Computing Practical",
+    "section": "",
+    "text": "Code\nlibrary(foreach)\n\nset.seed(1)   # optional, for reproducibility\nn &lt;- 1000     # &lt;-- choose sample size (question doesn't specify)\n\nresults &lt;- foreach(i = 1:100, .combine = rbind) %do% {\n  x_exp &lt;- rexp(n, rate = 1)        # exponential with mean 1\n  c(mean = mean(x_exp), var = var(x_exp))\n}\n\nresults\n\n\n                mean       var\nresult.1   1.0313027 0.9786333\nresult.2   0.9835434 0.9815014\nresult.3   1.0818140 1.2550505\nresult.4   0.9389005 0.9629267\nresult.5   1.0247902 1.1752677\nresult.6   0.9486421 0.9058095\nresult.7   0.9805007 1.0337246\nresult.8   0.9679499 0.9438743\nresult.9   1.0117298 1.0019641\nresult.10  1.0144393 1.0692747\nresult.11  0.9631482 0.8978858\nresult.12  0.9961887 0.8774613\nresult.13  1.0333988 1.0841105\nresult.14  0.9880045 0.9638238\nresult.15  1.0209995 0.9780074\nresult.16  0.9453456 0.8079335\nresult.17  1.0375844 1.0694607\nresult.18  1.0238085 0.8999454\nresult.19  0.9785002 0.9898071\nresult.20  0.9656615 0.9941361\nresult.21  0.9865729 0.9978514\nresult.22  0.9958122 0.9775518\nresult.23  0.9537707 0.8589293\nresult.24  1.0001437 0.9857569\nresult.25  0.9738992 0.9502280\nresult.26  1.0103345 0.9666074\nresult.27  1.0079689 1.0824930\nresult.28  0.9988629 1.1243880\nresult.29  0.9332774 0.8650596\nresult.30  1.0120886 1.1160083\nresult.31  1.0380837 1.1232312\nresult.32  1.0171108 1.1201296\nresult.33  0.9600871 0.7867749\nresult.34  1.0474666 1.1554636\nresult.35  1.0288508 0.9767777\nresult.36  1.0031458 1.0455669\nresult.37  0.9817091 0.9837367\nresult.38  0.9946747 0.9842155\nresult.39  1.0182635 1.0616313\nresult.40  1.0218261 1.0430447\nresult.41  1.0221567 1.0291942\nresult.42  1.0244518 1.0393174\nresult.43  0.9767339 0.9322047\nresult.44  1.0384112 1.0999901\nresult.45  1.0485217 1.1977786\nresult.46  1.0329312 1.1382620\nresult.47  1.0164090 0.9912762\nresult.48  1.0112398 1.0201387\nresult.49  1.0779749 1.1025222\nresult.50  1.0215096 0.9910904\nresult.51  1.0147553 0.9731918\nresult.52  0.9764819 1.0632304\nresult.53  0.9581230 1.0182481\nresult.54  1.0315221 1.1331262\nresult.55  1.0443987 1.1002168\nresult.56  0.9748261 0.9235055\nresult.57  1.0109147 0.9977795\nresult.58  0.9876215 0.9613870\nresult.59  1.0353851 1.0525024\nresult.60  0.9902192 0.9341333\nresult.61  0.9636531 0.8879503\nresult.62  0.9909700 1.0228540\nresult.63  1.0233567 1.0054774\nresult.64  1.0272990 1.0252174\nresult.65  0.9880080 0.9871918\nresult.66  0.9465605 1.0131585\nresult.67  1.0041699 0.9504636\nresult.68  1.0479885 1.1519072\nresult.69  0.9803458 0.9452229\nresult.70  0.9977605 0.9706140\nresult.71  1.0381804 1.1816593\nresult.72  1.0047518 1.0234839\nresult.73  0.9725990 0.9270461\nresult.74  1.0786367 1.0687342\nresult.75  1.0013499 0.9114923\nresult.76  1.0164524 1.0709289\nresult.77  1.0039343 1.0225032\nresult.78  0.9981551 0.9689776\nresult.79  0.9953469 1.0482052\nresult.80  1.0059072 1.0302505\nresult.81  1.0323107 1.0144545\nresult.82  1.0035524 0.9637289\nresult.83  1.0279003 1.0061957\nresult.84  0.9333129 0.8911205\nresult.85  1.0014807 0.9458462\nresult.86  0.9220987 0.8134307\nresult.87  1.0318815 1.0804089\nresult.88  1.0143130 0.9693476\nresult.89  1.0035318 1.0563924\nresult.90  0.9800668 0.8303149\nresult.91  1.0048351 0.9656916\nresult.92  0.9781290 0.8957636\nresult.93  0.9790531 0.8825760\nresult.94  1.0345803 0.9999594\nresult.95  0.9887709 0.9263355\nresult.96  0.9993229 0.9985710\nresult.97  0.9641514 0.9214794\nresult.98  1.0570749 1.0902030\nresult.99  1.0302152 1.1096513\nresult.100 0.9829585 1.0560014"
+  },
+  {
+    "objectID": "parallel_computing.html#serial-bootstrap",
+    "href": "parallel_computing.html#serial-bootstrap",
+    "title": "Parallel Computing Practical",
+    "section": "2.1 Serial Bootstrap:",
+    "text": "2.1 Serial Bootstrap:\nThis is the baseline - no parallel computing.\n\n\nCode\nset.seed(1)\n\ntime_serial &lt;- system.time({\n  boot_serial &lt;- replicate(B, {\n    median(sample(x, replace = TRUE))\n  })\n})\n\ntime_serial\n\n\n   user  system elapsed \n   0.47    0.00    0.47 \n\n\nNote: The baseline is already quite fast, hence the task can be seen as not computationally heavy."
+  },
+  {
+    "objectID": "parallel_computing.html#parallel-bootstrap-one-bootstrap-per-iteration",
+    "href": "parallel_computing.html#parallel-bootstrap-one-bootstrap-per-iteration",
+    "title": "Parallel Computing Practical",
+    "section": "2.2 Parallel Bootstrap (One bootstrap per iteration):",
+    "text": "2.2 Parallel Bootstrap (One bootstrap per iteration):\nSet up the cluster and Run a parallel version.\n\n\nCode\ncl &lt;- makeCluster(detectCores() - 1)\nregisterDoParallel(cl)\n\nset.seed(1)\n\ntime_parallel_single &lt;- system.time({\n  boot_parallel_single &lt;- foreach(i = 1:B, .combine = c) %dopar% {\n    median(sample(x, replace = TRUE))\n  }\n})\n\ntime_parallel_single\n\n\n   user  system elapsed \n   2.45    1.03    3.53 \n\n\nNote: We observe that parallel is much slower than serial. This could be due to the fact that each bootstrap task is tiny. You’re asking workers too: - receive a task - run one median computation - send result back The communication and coordination overhead dominates the actual computation time, and so this version shows that naive parallelisation can be slower than serial."
+  },
+  {
+    "objectID": "parallel_computing.html#parallel-bootstrap-with-batching-1000-per-worker-task",
+    "href": "parallel_computing.html#parallel-bootstrap-with-batching-1000-per-worker-task",
+    "title": "Parallel Computing Practical",
+    "section": "2.3 Parallel Bootstrap with Batching (1000 per worker task)",
+    "text": "2.3 Parallel Bootstrap with Batching (1000 per worker task)\nBatch reduces overhead from too many tiny tasks\n\n\nCode\nchunk_size &lt;- 1000\nchunks &lt;- split(1:B, ceiling((1:B) / chunk_size))\n\nset.seed(1)\n\ntime_parallel_chunk &lt;- system.time({\n  boot_parallel_chunk &lt;- foreach(chunk = chunks, .combine = c) %dopar% {\n    replicate(length(chunk), {\n      median(sample(x, replace = TRUE))\n    })\n  }\n})\n\ntime_parallel_chunk\n\n\n   user  system elapsed \n   0.00    0.00    0.17 \n\n\nInstead of sending 10,000 tiny jobs, you sent maybe 10 larger jobs (each doing 1000 bootstraps). Now: - Workers do substantial work before communicating back - Overhead is a mortised - Communication cost becomes negligible That’s why elapsed drops. This shows that batching reduces overhead and makes parallel computing effective.\n\n\nCode\nstopCluster(cl)"
+  },
+  {
+    "objectID": "parallel_computing.html#replicate-baseline",
+    "href": "parallel_computing.html#replicate-baseline",
+    "title": "Parallel Computing Practical",
+    "section": "5.1 Replicate (Baseline):",
+    "text": "5.1 Replicate (Baseline):\n\n\nCode\nset.seed(1234)\n\nsystem.time({\n  replicate_result &lt;- replicate(3, max(rnorm(5)))\n})\n\n\n   user  system elapsed \n   0.00    0.00    0.02"
+  },
+  {
+    "objectID": "parallel_computing.html#foreach-version",
+    "href": "parallel_computing.html#foreach-version",
+    "title": "Parallel Computing Practical",
+    "section": "5.2 Foreach Version:",
+    "text": "5.2 Foreach Version:\n\n\nCode\nset.seed(1234)\n\nsystem.time({\n  foreach_result &lt;- foreach(i = 1:3, .combine = c) %do% {\n    max(rnorm(5))\n  }\n})\n\n\n   user  system elapsed \n      0       0       0"
+  },
+  {
+    "objectID": "parallel_computing.html#parallel",
+    "href": "parallel_computing.html#parallel",
+    "title": "Parallel Computing Practical",
+    "section": "5.3 Parallel:",
+    "text": "5.3 Parallel:\n\n\nCode\ncl &lt;- makeCluster(detectCores() - 1)\nregisterDoParallel(cl)\n\nset.seed(1234)\n\nsystem.time({\n  foreach_parallel &lt;- foreach(i = 1:3, .combine = c) %dopar% {\n    max(rnorm(5))\n  }\n})\n\n\n   user  system elapsed \n   0.00    0.00    0.05 \n\n\nCode\nstopCluster(cl)"
+  },
+  {
+    "objectID": "parallel_computing.html#parlapply-version",
+    "href": "parallel_computing.html#parlapply-version",
+    "title": "Parallel Computing Practical",
+    "section": "5.4 parLapply Version:",
+    "text": "5.4 parLapply Version:\n\n\nCode\ncl &lt;- makeCluster(detectCores() - 1)\n\nset.seed(1234)\n\nsystem.time({\n  par_result &lt;- unlist(parLapply(cl, 1:3, function(i) {\n    max(rnorm(5))\n  }))\n})\n\n\n   user  system elapsed \n   0.02    0.00    0.00 \n\n\nCode\nstopCluster(cl)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistical Computing Assignment",
+    "section": "",
+    "text": "Note\n\n\n\nThis website contains my completed Statistical Computing assignment, including implementation, results, and performance comparisons between replicate, foreach, and parLapply. All results are reproducible (where applicable) and code is provided in full."
+  },
+  {
+    "objectID": "index.html#overview",
+    "href": "index.html#overview",
+    "title": "Statistical Computing Assignment",
+    "section": "1 Overview",
+    "text": "1 Overview\nThis assignment focuses on two core ideas:\n\nBootstrap / simulation workflows in R for estimating quantities of interest.\nParallel computing tools and best practices, including:\n\nforeach (sequential and parallel)\nparLapply (cluster-based parallelism)\nruntime comparisons and overhead considerations\nreproducibility challenges (random number generation in parallel)"
+  }
+]

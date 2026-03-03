@@ -1,0 +1,46 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Statistical Computing Assignment 2"
+  site-url: ""
+  repo-url: "https://github.com/ziyaada03/SC-Assignment2.git"
+  repo-actions: [source]
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: parallel_computing.qmd
+        text: Full Report
+    right:
+      - icon: github
+        href: ""
+        aria-label: GitHub repository
+
+  page-footer:
+    left: "Built with Quarto"
+    right: "© 2026"
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: darkly
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    smooth-scroll: true
+    code-fold: true
+    code-tools: true
+    code-copy: true
+    df-print: paged
+    highlight-style: github
+    css: styles.css
+
+execute:
+  echo: true
+  warning: false
+  message: false
+  cache: false
+  freeze: auto

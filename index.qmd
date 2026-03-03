@@ -1,0 +1,26 @@
+---
+title: "Statistical Computing Assignment"
+subtitle: "Bootstrap + Parallel Computing (foreach / parLapply / replicate)"
+author: "Ziyaad Ally"
+date: last-modified
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+::: callout-note
+This website contains my completed Statistical Computing assignment, including implementation, results, and performance comparisons between `replicate`, `foreach`, and `parLapply`. All results are reproducible (where applicable) and code is provided in full.
+:::
+
+## Overview
+
+This assignment focuses on two core ideas:
+
+1. **Bootstrap / simulation workflows** in R for estimating quantities of interest.
+2. **Parallel computing** tools and best practices, including:
+   - `foreach` (sequential and parallel)
+   - `parLapply` (cluster-based parallelism)
+   - runtime comparisons and overhead considerations
+   - reproducibility challenges (random number generation in parallel)
+

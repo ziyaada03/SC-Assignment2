@@ -1,0 +1,213 @@
+---
+title: "Parallel Computing Practical"
+format: html
+editor: visual
+---
+
+# Question 1: Foreach loop Experimentation
+
+```{r}
+library(foreach)
+
+set.seed(1)   # optional, for reproducibility
+n <- 1000     # <-- choose sample size (question doesn't specify)
+
+results <- foreach(i = 1:100, .combine = rbind) %do% {
+  x_exp <- rexp(n, rate = 1)        # exponential with mean 1
+  c(mean = mean(x_exp), var = var(x_exp))
+}
+
+results
+```
+
+# Question 2: Parallel Bootstrapping of the Median
+
+-   user = CPU time spent executing your R code
+-   system = OS-level time (managing processes, communication, etc.)
+-   elapsed = actual wall-clock time (what you care about)
+
+For performance comparisons, elapsed is the key number.
+
+```{r}
+library(MASS)
+library(foreach)
+library(doParallel)
+library(parallel)
+
+data(galaxies, package = "MASS")
+x <- galaxies
+
+B <- 10000  # number of bootstrap samples
+```
+
+## Serial Bootstrap:
+
+This is the baseline - no parallel computing.
+
+```{r}
+set.seed(1)
+
+time_serial <- system.time({
+  boot_serial <- replicate(B, {
+    median(sample(x, replace = TRUE))
+  })
+})
+
+time_serial
+```
+
+Note: The baseline is already quite fast, hence the task can be seen as not computationally heavy.
+
+## Parallel Bootstrap (One bootstrap per iteration):
+
+Set up the cluster and Run a parallel version.
+
+```{r}
+cl <- makeCluster(detectCores() - 1)
+registerDoParallel(cl)
+
+set.seed(1)
+
+time_parallel_single <- system.time({
+  boot_parallel_single <- foreach(i = 1:B, .combine = c) %dopar% {
+    median(sample(x, replace = TRUE))
+  }
+})
+
+time_parallel_single
+```
+
+Note: We observe that parallel is much slower than serial. This could be due to the fact that each bootstrap task is tiny. You're asking workers too: - receive a task - run one median computation - send result back The communication and coordination overhead dominates the actual computation time, and so this version shows that naive parallelisation can be slower than serial.
+
+## Parallel Bootstrap with Batching (1000 per worker task)
+
+Batch reduces overhead from too many tiny tasks
+
+```{r}
+chunk_size <- 1000
+chunks <- split(1:B, ceiling((1:B) / chunk_size))
+
+set.seed(1)
+
+time_parallel_chunk <- system.time({
+  boot_parallel_chunk <- foreach(chunk = chunks, .combine = c) %dopar% {
+    replicate(length(chunk), {
+      median(sample(x, replace = TRUE))
+    })
+  }
+})
+
+time_parallel_chunk
+
+```
+
+Instead of sending 10,000 tiny jobs, you sent maybe 10 larger jobs (each doing 1000 bootstraps). Now: - Workers do substantial work before communicating back - Overhead is a mortised - Communication cost becomes negligible That’s why elapsed drops. This shows that batching reduces overhead and makes parallel computing effective.
+
+```{r}
+stopCluster(cl)
+```
+
+# Question 3: Bootstrap Coverage Simulation
+
+Estimating the coverage of a percentile bootstrap confidence interval for the following scenario: sample of size 50 from an exponential distribution with mean 1.
+
+```{r}
+set.seed(1)
+
+R <- 2000     # number of simulated datasets (increase for more accuracy)
+n <- 50       # sample size per dataset
+B <- 1000     # bootstrap resamples per dataset
+true_mu <- 1  # true mean of Exp(mean=1)
+
+cover <- logical(R)
+
+for (r in 1:R) {
+  x <- rexp(n, rate = 1)  # mean = 1
+
+  boot_means <- replicate(B, mean(sample(x, replace = TRUE)))
+
+  ci <- quantile(boot_means, probs = c(0.025, 0.975), type = 6)
+
+  cover[r] <- (ci[1] <= true_mu) && (true_mu <= ci[2])
+}
+
+mean(cover)
+```
+
+Using 𝑅simulated data sets of size 𝑛= 50 from an exponential distribution with mean 1, and constructing 95% percentile bootstrap confidence intervals for the mean using 𝐵 bootstrap re-samples per data set, the estimated coverage was approximately 0.93. This is lower than the nominal 0.95 level, suggesting under-coverage. A likely reason is that the sampling distribution of the mean is skewed for exponential data at this sample size, and the simple percentile bootstrap interval is not perfectly calibrated under skewness
+
+# Question 4:
+
+Create an iterator that will generate 3 vectors, each of length 5 from a standard normal distribution, then use foreach to loop over those 3 vectors and return the max of each one.
+
+```{r}
+library(foreach)
+library(iterators)
+
+set.seed(1234)
+
+result <- foreach(x = irnorm(5, count = 3), .combine = c) %do% {
+  max(x)
+}
+
+print(result)
+```
+
+# Question 5:
+Run-Time comparisons between:
+- parLapply
+- foreach
+- replicate
+
+We expect since the problem is very small (only 3 × 5 numbers), parallel versions will likely be slower due to overhead.
+
+## Replicate (Baseline):
+```{r}
+set.seed(1234)
+
+system.time({
+  replicate_result <- replicate(3, max(rnorm(5)))
+})
+```
+## Foreach Version:
+```{r}
+set.seed(1234)
+
+system.time({
+  foreach_result <- foreach(i = 1:3, .combine = c) %do% {
+    max(rnorm(5))
+  }
+})
+```
+## Parallel:
+```{r}
+cl <- makeCluster(detectCores() - 1)
+registerDoParallel(cl)
+
+set.seed(1234)
+
+system.time({
+  foreach_parallel <- foreach(i = 1:3, .combine = c) %dopar% {
+    max(rnorm(5))
+  }
+})
+
+stopCluster(cl)
+```
+## parLapply Version:
+```{r}
+cl <- makeCluster(detectCores() - 1)
+
+set.seed(1234)
+
+system.time({
+  par_result <- unlist(parLapply(cl, 1:3, function(i) {
+    max(rnorm(5))
+  }))
+})
+
+stopCluster(cl)
+```
+
+
+
