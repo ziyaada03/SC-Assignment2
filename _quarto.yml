@@ -4,7 +4,6 @@ project:
 
 website:
   title: "Statistical Computing Assignment 2"
-  site-url: ""
   repo-url: "https://github.com/ziyaada03/SC-Assignment2.git"
   repo-actions: [source]
   navbar:
@@ -15,7 +14,7 @@ website:
         text: Full Report
     right:
       - icon: github
-        href: ""
+        href: "https://github.com/ziyaada03/SC-Assignment2.git"      
         aria-label: GitHub repository
 
   page-footer:
